@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator</title>
+    
+    <style>
+        *,
+        *::before,
+        *::after{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        #wrapper{
+            background: linear-gradient(231deg, rgba(22, 6, 40, 1) 0%, rgba(52, 28, 79, 1) 50%, rgba(88, 7, 125, 1) 100%);;
+        }
+        .back{
+            background: rgba(22, 6, 40, 1);
+            border-bottom: 6px solid hsl(281, 89%, 26%);
+            
+        }
+        .inputCon{
+            background: rgba(22, 6, 40, 1);
+            border-bottom: 6px solid hsl(281, 89%, 26%);
+        }
+        .display::-moz-placeholder{
+            color: rgb(126, 126, 2);
+            font-size: 24px;
+            line-height: 1.2;
+            letter-spacing: 0.1em;
+        }
+        .display::placeholder{
+            color: rgb(126, 126, 2);
+            font-size: 24px;
+            line-height: 1.2;
+            letter-spacing: 0.1em;
+        }
+        .boxses{
+            border: 1px solid cyan;
+        }
+        .boxses:checked{
+            background-color: cyan;
+        }
+        .boxses:checked::before{
+            content: '✔';
+            position: absolute;
+            font-weight: 600;
+            font-size:1.05rem;
+            /* left: 36%; */
+        }
+        .indicator {
+            width:1.5rem;
+            height:1.5rem;
+            border-radius:50%;
+        }
+        .slider{
+            background-color: hsl(268, 47%, 21%);
+            background-image: linear-gradient(hsl(285, 91%, 52%), hsl(285, 91%, 52%));
+            background-repeat: no-repeat;
+            border:none;
+            outline:none;
+        }
+        .slider::-webkit-slider-thumb {
+            position:relative;
+            -webkit-appearance: none;
+                    appearance: none;
+            height:2rem;
+            width:2rem;
+            border-radius: 50%;
+            background-color: hsl(52, 100%, 62%);
+            cursor:pointer;
+            margin-top: -3px;
+            box-shadow: 0px 0px 20px 0px rgba(255, 229, 61, 0.50);
+            -webkit-transition: all 100ms ease-in;
+            transition: all 100ms ease-in;
+        }
+        .slider:focus{
+            outline: 3px solid hsl(52, 100%, 62%);
+        }
+
+        .slider::-webkit-slider-thumb:hover{
+            outline: 2px solid hsl(52, 100%, 62%);
+            background-color: hsl(268, 75%, 9%);
+            box-shadow: 0px 0px 25px 5px rgba(255, 229, 61, 0.80);
+        }
+        .generateButton{
+            color: hsl(52, 99%, 67%);
+            background: hsl(285, 91%, 52%);
+            border-bottom: 6px solid hsl(52, 99%, 67%);
+        }
+        .copyBtn{
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+        .tooltip{
+            background-color: hsl(290, 70%, 36%);
+            color: hsl(52, 100%, 62%);
+            top: 90px;
+            transform: scale(0);
+            transform-origin: bottom;
+            transition: all 250ms ease-in-out;
+        }
+        .tooltip.active{
+            opacity: 1;
+            transform: scale(1);
+        }
+    </style>
+  <link rel="stylesheet" href="/assets/index-f2d576d2.css">
+</head>
+<body>
+    <div id="wrapper" class="w-[100vw] h-[100vh] relative">
+        <!-- Container -->
+        <div class="pt-8 max-w-[500px] w-[90%] mx-auto flex flex-col leading-[1.2] tracking-widest items-center">
+            <!-- Heading -->
+            <h1 class=" text-white text-2xl sm:text-3xl font-bold opacity-70 my-6">PASSWORD GENERETOR</h1>
+
+            <!-- Display Container  -->
+            <div class="rounded-2xl w-[95%] flex py-6 px-6 border-b-purple-600 justify-between display-container back">
+                <input readonly placeholder="PASSWORD" class="bg-transparent font-bold text-yellow-500 display" data-passwordDisplay>
+
+                <button class="copyBtn" data-copy>
+                    <span class="absolute text-xl left-[75%] md:left-[70%] lg:left-[60%] rounded-2xl px-3 py-1 opacity-0 tooltip" data-copyMsg></span>
+                    <img src="/assets/copy-88fb2557.svg" alt="copy" width="23" height="23">
+                </button>
+            </div>
+
+            <!-- Input Container -->
+            <div class="input-container max-w-[500px] w-[95%] flex flex-col mt-5 gap-3 pt-5 my-5 rounded-xl inputCon">
+
+                <!-- Password length section -->
+                <div class="flex justify-between text-xl font-semibold length-container">
+                    <p class="text-white pl-6">Password Length</p>
+                    <p class="text-yellow-500 pr-6" data-lengthNumber>0</p>
+                </div>
+
+                <!-- slider -->
+                <input type="range" min="1" max="20" class="appearance-none rounded-2xl w-[90%] h-3 mt-8 mb-6 mx-auto cursor-pointer slider" step="1" data-lengthSlider>
+
+                <!-- checkboxes -->
+                <div class="text-white w-[90%] mx-auto flex font-semibold gap-4">
+                    <input type="checkbox" id="uppercase" class="appearance-none h-5 w-5 rounded-md boxses">
+                    <label for="uppercase">Includes Uppercase letters</label>
+                </div>
+
+                <div class="text-white w-[90%] mx-auto flex font-semibold gap-4">
+                    <input type="checkbox" id="lowercase" class="appearance-none h-5 w-5 rounded-md boxses">
+                    <label for="lowercase">Includes Lowercase letters</label>
+                </div>
+
+                <div class="text-white w-[90%] mx-auto flex font-semibold gap-4">
+                    <input type="checkbox" id="numbers" class="appearance-none h-5 w-5 rounded-md boxses">
+                    <label for="numbers">Includes Numbers</label>
+                </div>
+
+                <div class="text-white w-[90%] mx-auto flex font-semibold gap-4">
+                    <input type="checkbox" id="symbols" class="appearance-none h-5 w-5 rounded-md boxses">
+                    <label for="symbols">Includes Symbols</label>
+                </div>
+
+                <!-- Strength Section -->
+                <div class="strength-container flex justify-between items-center mt-2 mb-4 w-[90%] mx-auto">
+                    <p class="text-white text-2xl ">Strength</p>
+                    <div class="indicator" data-indicator></div>
+                </div>
+
+                <!-- Generate Password -->
+                <button class="text-xl font-bold w-[90%] mx-auto rounded-xl px-6 py-4 mb-6 generateButton">GENERATE PASSWORD</button>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>
